@@ -1,0 +1,8 @@
+.env
+
+# Include the modified mysqldump package for node v16
+node_modules/
+
+# Keep this directory for database dumps
+backups/*
+!backups/.gitkeep 
