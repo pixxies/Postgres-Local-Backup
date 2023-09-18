@@ -1,6 +1,6 @@
 {
-    "name": "automated-nodejs-backups",
-    "version": "0.0.0",
+    "name": "postgres-local-backups",
+    "version": "1.0.0",
     "main": "./dist/index.js",
     "engines": {
         "node": ">=18",
