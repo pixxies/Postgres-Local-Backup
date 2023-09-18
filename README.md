@@ -1,17 +1,16 @@
-# Remote MYSQL Local Database Dumps
+# Postgres Local Backups
 
-## Does automated daily dumps of your remote MYSQL database to your local machine and pings you on Discord
+## Create regular Postgres database backups on your local machine and get pinged on Discord when they run!
 
 ### Features
 
-- Dumps your remote MYSQL database into the `backups` directory.
+- Dumps your remote Postgres database into a `backups` directory on your local machine.
 - Sends you notifications in a Discord channel through a webhook.
 - Automatically deletes old backups after a certain number of days to clear space on your local disk.
 
 ### System requirements
 
-- Node.js v16 or higher.
-- The modified version of [mysqldump](https://github.com/bradzacher/mysqldump) in our `node_modules` directory to work with node v16 and above.
+- Node.js v18 or higher.
 - Recommended: PM2 to run the process.
 
 **Note:** This does require your local machine being turned on, the process to be running and a stable internet connection to work. If the backup fails at the pre-defined backup time, it won't run again until the following day.
@@ -19,40 +18,32 @@
 ### Installation
 
 ```
-git clone https://github.com/pixxies/Remote-MYSQL-Local-Database-Dumps.git
+git clone https://github.com/pixxies/Postgres-Local-Backup.git
 npm install
 ```
 
-Change the values in `config_sample.json` to your details and rename the file to `config.json`.
+Change the values in `sample.env` to your details and rename the file to `.env`.
 
-```js
-{
-    "backup_filename_prefix": "bot_name_here",
-    "mysql":
-        {
-            "host": "db.host.tld",
-            "user": "db_user",
-            "password": "db_pass",
-            "database": "db_name"
-        },
-    "discord":
-        {
-            "webhook": "https://discord.com/api/webhooks/CHANNEL_ID/WEBHOOK",
-            "username": "Webhook Name",
-            "owner_id": "bot_owner_discord_id"
-        },
-    "days_to_keep": 1
-}
+```env
+PG_HOST="my.host.tld"
+PG_PORT="5432"
+PG_USER="admin"
+PG_PASSWORD="1234567890"
+PG_DATABASE="my_database"
+DISCORD_WEBHOOK="" // https://discord.com/api/webhooks/...
+DISCORD_USERNAME="My Cool Bot" // The webhook's name in Discord
+DISCORD_PING_ID="643945264868098049"
+DAYS_TO_KEEP="7" // Set to "0" to never expire - this may fill your disk space quickly
 ```
 
-You'll need to create a Discord webhook in a channel and paste the link into the config file above.
+You'll need to create a Discord webhook in a channel and paste the link into the `.env` file above.
 
-The `owner_id` is the Discord ID of the person the webhook will ping for notifications. You can make the webhook ping a role instead by prefixing a role ID with `&`, for example `&761916863847333928`.
+The `DISCORD_PING_ID` is the Discord ID of the person the webhook will ping for notifications. You can make the webhook ping a role instead by prefixing a role ID with `&`, for example `&761916863847333928`.
 
-Set the number of days to keep old dumps with the `days_to_keep` value in your `config.json` file.
+Set the number of days to keep old dumps with the `DAYS_TO_KEEP` value in your `.env` file. To never delete old backups, set this value to 0.
 
 ### Startup
 
 1. Open a new terminal window in your project directory.
-2. Run `pm2 startup index.js --name mysql_backup --time`.
-3. You'll recieve confirmation of startup and all events in the logs. Run `pm2 logs mysql_backup` to see the logs.
+2. Run `npm run build && pm2 start npm --name "postgres-local-backups" -- start`.
+3. You'll recieve confirmation of startup and all events in the logs. Run `pm2 logs postgres-local-backups` to see the logs.
