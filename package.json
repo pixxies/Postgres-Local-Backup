@@ -1,0 +1,42 @@
+{
+    "name": "automated-nodejs-backups",
+    "version": "0.0.0",
+    "main": "./dist/index.js",
+    "engines": {
+        "node": ">=18",
+        "npm": ">=8"
+    },
+    "scripts": {
+        "format": "prettier --check \"**/*.{ts,tsx,js,md}\"",
+        "format:fix": "prettier --write \"**/*.{ts,tsx,js,md}\"",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "test": "echo \"Todo: add tests\" && exit 0",
+        "clean": "rm -rf dist",
+        "build": "npm run clean && tsc",
+        "start": "node -r dotenv/config dist/index.js",
+        "dev": "nodemon --watch src --exec \"npm run build && npm start\" --ext \"ts,json\""
+    },
+    "dependencies": {
+        "@getvim/execute": "^1.0.0",
+        "axios": "^0.21.0",
+        "dotenv": "^8.2.0",
+        "fetch": "*",
+        "form-data": "^3.0.0",
+        "gzipme": "^1.0.0",
+        "node-cron": "^2.0.3",
+        "node-fetch": "^2.6.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.6.2",
+        "@types/node-cron": "^3.0.8",
+        "@types/pg": "8.6.6",
+        "@typescript-eslint/eslint-plugin": "5.57.0",
+        "@typescript-eslint/parser": "5.57.0",
+        "eslint": "8.37.0",
+        "eslint-config-prettier": "8.8.0",
+        "nodemon": "2.0.22",
+        "prettier": "2.8.7",
+        "typescript": "5.0.3"
+    }
+}
