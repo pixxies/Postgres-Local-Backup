@@ -92,7 +92,7 @@ function cleanupOldBackups() {
 // Running backups daily at 11 am local time
 function startSchedule() {
   cron.schedule(
-    '0 34 12 * * *',
+    '0 0 11 * * *',
     () => {
       script()
     },
