@@ -25,15 +25,15 @@ npm install
 Change the values in `sample.env` to your details and rename the file to `.env`.
 
 ```env
-PG_HOST="my.host.tld"
-PG_PORT="5432"
-PG_USER="admin"
-PG_PASSWORD="1234567890"
-PG_DATABASE="my_database"
-DISCORD_WEBHOOK="" // https://discord.com/api/webhooks/...
-DISCORD_USERNAME="My Cool Bot" // The webhook's name in Discord
-DISCORD_PING_ID="643945264868098049"
-DAYS_TO_KEEP="7" // Set to "0" to never expire - this may fill your disk space quickly
+PG_HOST="" # my.host.tld
+PG_PORT="5432" # Postgres default is 5432
+PG_USER="" # admin
+PG_PASSWORD="" # password123
+PG_DATABASE="" # my_database
+DISCORD_WEBHOOK="" # https://discord.com/api/webhooks/...
+DISCORD_USERNAME="" # My Cool Bot
+DISCORD_PING_ID="" # A Discord user ID like 643945264868098049 or role ID prefixed with a "&" symbol
+DAYS_TO_KEEP="7" # Set to "0" to never expire - this may fill your disk space quickly
 ```
 
 You'll need to create a Discord webhook in a channel and paste the link into the `.env` file above.
