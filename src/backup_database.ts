@@ -3,8 +3,8 @@
 const exec = require('child_process').exec
 import cron from 'node-cron'
 import fs from 'fs'
-import path from 'path'
 import dotenv from 'dotenv'
+import moment from 'moment'
 dotenv.config()
 
 import discord_webhook from './discord_webhook'
@@ -57,36 +57,40 @@ function script() {
 // Delete old backups
 function cleanupOldBackups() {
   if (expire_after === 0) return
-  const now = new Date()
-  const expireTimeout = new Date(
-    now.getTime() - expire_after * 24 * 60 * 60 * 1000
-  )
-  fs.readdir(backupDir, (error: any, files: Array<any>) => {
-    if (error) {
-      console.error('Error reading backup directory:', error)
-      return
-    }
-    files.forEach((file: any) => {
-      const filePath = path.join(backupDir, file)
-      fs.stat(filePath, (error: any, stats: { mtime: any }) => {
-        if (error) {
-          console.error(`Error checking file stats for ${filePath}:`, error)
-          return
+  // Get the current date
+  const currentDate = moment();
+
+  try {
+    // Read the directory and filter files with the naming convention
+    const files = fs.readdirSync(backupDir)
+      .filter((filename) => /^.*?-\d{4}_\d{2}_\d{2}\.tar$/.test(filename));
+
+    files.forEach((filename) => {
+      const filePath = `${backupDir}/${filename}`;
+
+      // Extract the date from the filename using regular expressions
+      const match = filename.match(/^.*?-(\d{4})_(\d{2})_(\d{2})\.tar$/);
+      if (match) {
+        const [, yearStr, monthStr, dayStr] = match;
+        const year = Number(yearStr);
+        const month = Number(monthStr) - 1; // Months are zero-based
+        const day = Number(dayStr);
+
+        const fileDate = moment({ year, month, day });
+
+        // Calculate the difference in days
+        const daysDifference = currentDate.diff(fileDate, 'days');
+
+        if (daysDifference > expire_after) {
+          // Delete the file if it's older than expireAfter days
+          fs.unlinkSync(filePath);
+          console.log(`Deleted ${filename} as it is ${daysDifference} days old`);
         }
-        const fileModificationDate = stats.mtime // Get file modification date
-        if (fileModificationDate < expireTimeout) {
-          // If the file is older than expireTimeout, delete it
-          fs.unlink(filePath, (error: any) => {
-            if (error) {
-              console.error(`Error deleting file ${filePath}:`, error)
-            } else {
-              console.log(`Deleted old backup file: ${filePath}`)
-            }
-          })
-        }
-      })
-    })
-  })
+      }
+    });
+  } catch (error) {
+    console.error(`Error reading or deleting files: ${error}`);
+  }
 }
 
 // Running backups daily at 11 am local time
