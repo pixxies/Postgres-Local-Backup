@@ -58,38 +58,39 @@ function script() {
 function cleanupOldBackups() {
   if (expire_after === 0) return
   // Get the current date
-  const currentDate = moment();
+  const currentDate = moment()
 
   try {
     // Read the directory and filter files with the naming convention
-    const files = fs.readdirSync(backupDir)
-      .filter((filename) => /^.*?-\d{4}_\d{2}_\d{2}\.tar$/.test(filename));
+    const files = fs
+      .readdirSync(backupDir)
+      .filter((filename) => /^.*?-\d{4}_\d{2}_\d{2}\.tar$/.test(filename))
 
     files.forEach((filename) => {
-      const filePath = `${backupDir}/${filename}`;
+      const filePath = `${backupDir}/${filename}`
 
       // Extract the date from the filename using regular expressions
-      const match = filename.match(/^.*?-(\d{4})_(\d{2})_(\d{2})\.tar$/);
+      const match = filename.match(/^.*?-(\d{4})_(\d{2})_(\d{2})\.tar$/)
       if (match) {
-        const [, yearStr, monthStr, dayStr] = match;
-        const year = Number(yearStr);
-        const month = Number(monthStr) - 1; // Months are zero-based
-        const day = Number(dayStr);
+        const [, yearStr, monthStr, dayStr] = match
+        const year = Number(yearStr)
+        const month = Number(monthStr) - 1 // Months are zero-based
+        const day = Number(dayStr)
 
-        const fileDate = moment({ year, month, day });
+        const fileDate = moment({ year, month, day })
 
         // Calculate the difference in days
-        const daysDifference = currentDate.diff(fileDate, 'days');
+        const daysDifference = currentDate.diff(fileDate, 'days')
 
         if (daysDifference > expire_after) {
           // Delete the file if it's older than expireAfter days
-          fs.unlinkSync(filePath);
-          console.log(`Deleted ${filename} as it is ${daysDifference} days old`);
+          fs.unlinkSync(filePath)
+          console.log(`Deleted ${filename} as it is ${daysDifference} days old`)
         }
       }
-    });
+    })
   } catch (error) {
-    console.error(`Error reading or deleting files: ${error}`);
+    console.error(`Error reading or deleting files: ${error}`)
   }
 }
 
