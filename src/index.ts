@@ -15,11 +15,12 @@ if (
   !pgpsw ||
   !discord_webhook_url ||
   !expire_after
-)
+) {
   throw Error(
     'The .env file is missing some parameters! Please check your .env file and try again.'
   )
-exit(1)
+  exit(1)
+}
 
 startSchedule()
 
