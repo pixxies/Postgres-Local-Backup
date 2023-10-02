@@ -28,7 +28,7 @@ function filename(file_prefix: string) {
   if (d < 10) D = '0' + D
 
   let M = (m + 1).toString()
-  if (m < 10) M = '0' + M
+  if (m < 9) M = '0' + M
 
   return `${file_prefix}-${Y}_${M}_${D}.tar`
 }
