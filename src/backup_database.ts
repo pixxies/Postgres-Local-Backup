@@ -94,8 +94,23 @@ function cleanupOldBackups() {
   }
 }
 
+// Check if a backup for today already exists
+function todayBackupExists(): boolean {
+  const todayFilename = filename(database!)
+  const filePath = `${backupDir}/${todayFilename}`
+  return fs.existsSync(filePath)
+}
+
 // Running backups daily at 11 am local time
 function startSchedule() {
+  // Run a backup immediately on startup if none exists for today
+  if (!todayBackupExists()) {
+    console.log('No backup found for today, starting one now...')
+    script()
+  } else {
+    console.log('Backup for today already exists, skipping immediate backup.')
+  }
+
   cron.schedule(
     '0 0 11 * * *',
     () => {
